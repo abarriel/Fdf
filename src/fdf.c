@@ -6,58 +6,56 @@
 /*   By: abarriel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/27 21:56:08 by abarriel          #+#    #+#             */
-/*   Updated: 2017/01/27 21:56:11 by abarriel         ###   ########.fr       */
+/*   Updated: 2017/02/17 10:20:32 by abarriel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-int my_key_funct(int keycode, void *param)
+int		hook_mod(int code, t_env *e)
 {
-	ft_printf("key event %d\n",keycode);
-	if (keycode == 53)
-		exit(0);
-	keycode = 1;
-	return 0;
+	create_img(e);
+	return (0);
 }
 
-t_env	*set_env()
+void	set_env(t_env *p)
 {
-	t_env *tmp;
-
-	tmp = (t_env *)malloc(sizeof(t_env));
-	tmp->mlx = mlx_init();
-	tmp->x = 0;
-	tmp->win_large = 1200;
-	tmp->win_longu = 2000;
-	tmp->y = 0;
-	tmp->x_max = 0;
-	tmp->y_max = 0;
-	return (tmp);
+	p->mlx = mlx_init();
+	p->pente = 6;
+	p->data = NULL;
+	p->map = NULL;
+	p->tab = NULL;
+	p->img = NULL;
+	p->nbcolon = 0;
+	p->nbline = 0;
+	p->color = 0xFFFFFF;
+	p->e = 2;
+	p->key = 0;
+	p->color2 = 0xFFFFFF;
+	p->win_large = 1200;
+	p->win_longu = 2000;
+	p->sy = 500;
+	p->sx = 0;
+	p->y = -1;
+	p->u = 1;
+	p->i = -1;
+	p->x = -1;
+	p->z = 0;
 }
 
-int main(int av, char **ac)
+int		main(int av, char **ac)
 {
-	t_env *e;
+	t_env	e;
 
-	e = set_env();
-	e->win = mlx_new_window(e->mlx, e->win_longu, e->win_large, "FDF");
-	//get_map(e, av, ac);
-	get_img(e);
-	// y = 50;
-	// while (y < 150)
-	// {
-	// 	x = 50;
-	// 	while (x < 150)
-	// 	{
-	// 		mlx_pixel_put(e->mlx, e->win, x, y, 0xFF00FFF);
-	// 		x++;
-	// 	}
-	// 	y++;
-	// }
-	mlx_key_hook(e->win, my_key_funct, 0);
-	mlx_loop(e->mlx);
-	// mlx_key_hook(e->win, my_key_funct, 0);
-	// mlx_loop(e->mlx);
+	if (av != 2)
+	{
+		ft_dprintf(2, "Too Many/Few Arguments\n");
+		return (-1);
+	}
+	set_env(&e);
+	get(&e, av, ac);
+	mlx_key_hook(e.win, handles_keys, &e);
+	mlx_hook(e.win, 2, 0, hook_mod, &e);
+	mlx_loop(e.mlx);
 	return (0);
 }

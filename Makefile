@@ -12,7 +12,7 @@
 
 NAME	= fdf
 
-SRC		=	fdf.c gets.c start.c
+SRC		=	fdf.c get.c tab.c trace.c add.c
 
 OBJ		= $(addprefix src/,$(SRC:.c=.o))
 
